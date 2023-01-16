@@ -1,26 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package perpustakaan;
 import java.util.*;
-//import java.util.Scanner;
-//import java.util.ArrayList;
-//import java.util.List;
+import javax.swing.*;
+
+
+
 public class Perpustakaan {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         
-     // menggunakan scanner dan menyimpan apa yang diketik di variabel nama
-        Login login = new Login();
-        login.prosesLogin();
+        gui g = new gui(500, 300);
+        g.setVisible(true);
 
-        Dashboard dashboard = new Dashboard();
-        dashboard.showDashboard();
     }
 }   
 
@@ -48,93 +39,107 @@ class Dashboard implements Navigation {
 
         Scanner input = new Scanner(System.in);
 
-        while(exit) {
-           showNavigation();
-           String pilih = input.nextLine();
+        try{
+            while(exit) {
+                showNavigation();
 
-           switch(pilih){
-               case "1" ->{ 
-                   System.out.println("Tambah data Buku : ");
-                   String tambah = input.nextLine();
-                   buku.tambahBuku(tambah);
-                   break;
-               }
+                int pilih = input.nextInt();
+                input.nextLine();
 
-               case "2" -> {
-                   System.out.println("Buku Yang Mau di Edit : ");
-                   String bukuLama = input.nextLine();
-                   System.out.println("Di ubah menjadi :");
-                   String bukuBaru = input.nextLine();
-                   buku.editBuku(bukuLama, bukuBaru);
-                   break;
-               }
+                switch(Integer.valueOf(pilih)){
+                    case 1 ->{ 
+                        System.out.println("Tambah data Buku : ");
+                        String tambah = input.nextLine();
+                        buku.tambahBuku(tambah);
+                        break;
+                    }
+
+                    case 2 -> {
+                        System.out.println("Buku Yang Mau di Edit : ");
+                        String bukuLama = input.nextLine();
+                        System.out.println("Di ubah menjadi :");
+                        String bukuBaru = input.nextLine();
+                        buku.editBuku(bukuLama, bukuBaru);
+                        break;
+                    }
 
 
-               case  "3"->{ 
-                   System.out.println("Hapus Data Buku");
-                   String hapus = input.nextLine();
-                   buku.hapusBuku(hapus);
-                   break;
-               }
+                    case  3 ->{ 
+                        System.out.println("Hapus Data Buku");
+                        String hapus = input.nextLine();
+                        buku.hapusBuku(hapus);
+                        break;
+                    }
 
-               case  "4" ->{ 
-                   System.out.println("Tampilkan data Buku");
-                   buku.tampilDataBuku();
-                   break;
-               }
+                    case  4 ->{ 
+                        System.out.println("Tampilkan data Buku");
+                        buku.tampilDataBuku();
+                        break;
+                    }
 
-               case  "5" ->{ 
-                   System.out.println("Detail Buku");
-                   Detail detail = new Detail();
-                   detail.tampilkanDetail();
-                   detail.tampilkanDetail("20000");
-                   break;
-               }
-               default -> {
-                   exit = false;
-               }
-           }
+                    case  5 ->{ 
+                        System.out.println("Detail Buku");
+                        Detail detail = new Detail();
+                        detail.tampilkanDetail();
+                        detail.tampilkanDetail("20000");
+                        break;
+                    }
+                    default -> {
+                        exit = false;
+                    }
+                }
+
+
+            }
+        }catch(InputMismatchException e){
+            System.out.println("Error Format Input Angka 1 sampai 6");
         }
    }
 }
 
 class Buku extends Pustakawan {
-    List<String> Buku = new ArrayList<>();
+    ArrayList<String> objBuku = new ArrayList<>();
     public Object buku;
     
-    
+    public ArrayList<String> all(){
+        return objBuku;
+    }
     public Buku()
     {
-      Buku.add("Matematika");
-      Buku.add("Pancasila");
-      Buku.add("Kimia");
+      objBuku.add("Matematika");
+      objBuku.add("Pancasila");
+      objBuku.add("Kimia");
     }
     
-    public void tambahBuku(String buku)
+    public String tambahBuku(String buku)
     {
-        Buku.add(buku);
-        System.out.println("Berhasil Menambahkan Buku "+buku );
+        objBuku.add(buku);
+        return "Berhasil Menambahkan Buku "+buku ;
     }
     
-    public void hapusBuku(String buku)
+    public String hapusBuku(String buku)
     {
-        Buku.remove(buku);
-        System.out.println("Berhasil Menghapus"+buku );
+        objBuku.remove(buku);
+        return "Berhasil Menghapus"+buku;
     }
     
-    public void editBuku(String bukuLama , String bukuEdit)
+    public String editBuku(String bukuLama , String bukuEdit)
     {
-        Buku.remove(bukuLama);
-        Buku.add(bukuEdit);
-        System.out.println("Edit Buku"+bukuLama+"Menjadi"+bukuEdit);        
-    }
-    
-    public void tampilDataBuku()
-    {
-        for(String buku : Buku){
-            System.out.println(buku+", ");
-        }
+        objBuku.remove(bukuLama);
+        objBuku.add(bukuEdit);
         
+        return "Edit Buku"+bukuLama+"Menjadi"+bukuEdit;
+    }
+    
+    public String tampilDataBuku()
+    {
+        String data = "<html>";
+        for(String buku : objBuku){
+            data = data + buku+ "<br/>";
+        }
+        data = data + "</html>";
+        
+        return data;
     }
 }
 class Pustakawan {
